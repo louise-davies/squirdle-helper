@@ -8,107 +8,76 @@ import {
   ArrowCircleDownTwoTone,
 } from "@mui/icons-material";
 
-interface GuessResponseProps {
-  type: boolean;
-}
-
 type CommonStates = "correct" | "unselected";
-type TypeStates = "wrong" | "swap";
-type OtherStates = "lower" | "higher";
+type TypeSpecificStates = "wrong" | "swap";
+type OtherSpecificStates = "lower" | "higher";
+export type TypeStates = CommonStates | TypeSpecificStates;
+export type OtherStates = CommonStates | OtherSpecificStates;
 
 interface TypeState {
-  isType: true;
-  state: CommonStates | TypeStates;
+  type: true;
+  state: TypeStates;
+  onStateChange: (state: TypeStates) => void;
 }
 
 interface OtherState {
-  isType: false;
-  state: CommonStates | OtherStates;
+  type: false;
+  state: OtherStates;
+  onStateChange: (state: OtherStates) => void;
 }
 
-type GuessResponseState = TypeState | OtherState;
+type GuessResponseProps = TypeState | OtherState;
 
 const GuessResponse: React.FC<GuessResponseProps> = (props) => {
-  const { type } = props;
-
-  const [state, setState] = React.useState<GuessResponseState>({
-    isType: type,
-    state: "unselected",
-  });
-
   const onClick = React.useCallback(() => {
-    if (state.isType) {
-      switch (state.state) {
+    if (props.type) {
+      switch (props.state) {
         case "unselected":
-          setState({
-            isType: state.isType,
-            state: "correct",
-          });
+          props.onStateChange("correct");
           break;
         case "correct":
-          setState({
-            isType: state.isType,
-            state: "wrong",
-          });
+          props.onStateChange("wrong");
           break;
         case "wrong":
-          setState({
-            isType: state.isType,
-            state: "swap",
-          });
+          props.onStateChange("swap");
           break;
         case "swap":
-          setState({
-            isType: state.isType,
-            state: "correct",
-          });
+          props.onStateChange("correct");
           break;
       }
     } else {
-      switch (state.state) {
+      switch (props.state) {
         case "unselected":
-          setState({
-            isType: state.isType,
-            state: "correct",
-          });
+          props.onStateChange("correct");
           break;
         case "correct":
-          setState({
-            isType: state.isType,
-            state: "higher",
-          });
+          props.onStateChange("higher");
           break;
         case "higher":
-          setState({
-            isType: state.isType,
-            state: "lower",
-          });
+          props.onStateChange("lower");
           break;
         case "lower":
-          setState({
-            isType: state.isType,
-            state: "correct",
-          });
+          props.onStateChange("correct");
           break;
       }
     }
-  }, [state.isType, state.state]);
+  }, [props]);
 
-  if (state.state === "unselected") {
+  if (props.state === "unselected") {
     return <Circle onClick={onClick} />;
-  } else if (state.state === "correct") {
+  } else if (props.state === "correct") {
     return <CheckCircle sx={{ color: "green" }} onClick={onClick} />;
-  } else if (state.state === "wrong") {
+  } else if (props.state === "wrong") {
     return <Cancel sx={{ color: "red" }} onClick={onClick} />;
-  } else if (state.state === "swap") {
+  } else if (props.state === "swap") {
     return (
       <SwapHorizontalCircle sx={{ color: "goldenrod" }} onClick={onClick} />
     );
-  } else if (state.state === "higher") {
+  } else if (props.state === "higher") {
     return (
       <ArrowCircleUpTwoTone sx={{ color: "dodgerblue" }} onClick={onClick} />
     );
-  } else if (state.state === "lower") {
+  } else if (props.state === "lower") {
     return (
       <ArrowCircleDownTwoTone sx={{ color: "dodgerblue" }} onClick={onClick} />
     );
