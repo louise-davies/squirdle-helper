@@ -1,10 +1,13 @@
 import React from "react";
-import { fetchPokedex, Pokedex, PokedexEntry } from "./pokedex";
+import { fetchPokedex, Pokedex } from "./pokedex";
 import Guess, { GuessType } from "./Guess.component";
 import { Box, Button } from "@mui/material";
 
-function mode(array: string[] | number[]): string | number {
-  if (array.length === 0) return "";
+function mode(
+  array: string[] | number[],
+  topX?: number
+): [string | number, number] | [string | number, number][] {
+  if (array.length === 0) return ["", 0];
   const modeMap: { [type: string | number]: number } = {};
   let maxEl = array[0],
     maxCount = 1;
@@ -17,7 +20,16 @@ function mode(array: string[] | number[]): string | number {
       maxCount = modeMap[el];
     }
   }
-  return maxEl || "None";
+  if (!topX) {
+    return [maxEl || "None", maxCount];
+  } else {
+    return Object.entries(modeMap)
+      .sort((a, b) => {
+        return b[1] - a[1];
+      })
+      .slice(0, topX)
+      .map<[string | number, number]>((x) => [x[0] || "None", x[1]]);
+  }
 }
 
 function median(numbers: number[]): number {
@@ -123,6 +135,13 @@ const App: React.FC = () => {
   const modeType2 = mode(
     possibilities.map(([string, pokedexEntry]) => pokedexEntry[2])
   );
+  const modeTypes = mode(
+    [
+      ...possibilities.map(([string, pokedexEntry]) => pokedexEntry[1]),
+      ...possibilities.map(([string, pokedexEntry]) => pokedexEntry[2]),
+    ],
+    5
+  ) as [string | number, number][];
   const medianHeight = median(
     possibilities.map(([string, pokedexEntry]) => pokedexEntry[3])
   );
@@ -177,16 +196,16 @@ const App: React.FC = () => {
         </Box>
         <Box display="flex" flexDirection="column">
           <div>Suggestions</div>
-          <div>Type 1</div>
-          <div>Most common: {modeType1}</div>
-          <div>Type 2</div>
-          <div>Most common: {modeType2}</div>
-          <div>Height</div>
-          <div>Median: {medianHeight}</div>
-          <div>Weight</div>
-          <div>Median: {medianWeight}</div>
-          <div>Suggested Guess</div>
-          <div>Median: {medianWeight}</div>
+          <div>Mode type 1: {modeType1[0]}</div>
+          <div>Mode type 2: {modeType2[0]}</div>
+          <div>Most common types: </div>
+          {modeTypes.map((x) => (
+            <div key={x[0]}>
+              {x[0]}: {x[1]}
+            </div>
+          ))}
+          <div>Median height: {medianHeight}</div>
+          <div>Median weight: {medianWeight}</div>
         </Box>
       </Box>
     </div>

@@ -46,11 +46,11 @@ const Guess: React.FC<GuessProps> = (props) => {
             pokemon: newValue ?? "",
           });
         }}
-        sx={{ width: 300 }}
+        sx={{ width: 300, padding: "10px" }}
         options={options}
         renderInput={(params) => <TextField {...params} label="Pokémon" />}
       />
-      <Box>
+      <Box sx={{ whiteSpace: "nowrap" }}>
         <GuessResponse
           type={false}
           state={gen}

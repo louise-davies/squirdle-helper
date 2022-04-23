@@ -64,22 +64,41 @@ const GuessResponse: React.FC<GuessResponseProps> = (props) => {
   }, [props]);
 
   if (props.state === "unselected") {
-    return <Circle onClick={onClick} />;
+    return <Circle onClick={onClick} sx={{ height: "30px", width: "30px" }} />;
   } else if (props.state === "correct") {
-    return <CheckCircle sx={{ color: "green" }} onClick={onClick} />;
+    return (
+      <CheckCircle
+        sx={{ color: "green", height: "30px", width: "30px" }}
+        onClick={onClick}
+      />
+    );
   } else if (props.state === "wrong") {
-    return <Cancel sx={{ color: "red" }} onClick={onClick} />;
+    return (
+      <Cancel
+        sx={{ color: "red", height: "30px", width: "30px" }}
+        onClick={onClick}
+      />
+    );
   } else if (props.state === "swap") {
     return (
-      <SwapHorizontalCircle sx={{ color: "goldenrod" }} onClick={onClick} />
+      <SwapHorizontalCircle
+        sx={{ color: "goldenrod", height: "30px", width: "30px" }}
+        onClick={onClick}
+      />
     );
   } else if (props.state === "higher") {
     return (
-      <ArrowCircleUpTwoTone sx={{ color: "dodgerblue" }} onClick={onClick} />
+      <ArrowCircleUpTwoTone
+        sx={{ color: "dodgerblue", height: "30px", width: "30px" }}
+        onClick={onClick}
+      />
     );
   } else if (props.state === "lower") {
     return (
-      <ArrowCircleDownTwoTone sx={{ color: "dodgerblue" }} onClick={onClick} />
+      <ArrowCircleDownTwoTone
+        sx={{ color: "dodgerblue", height: "30px", width: "30px" }}
+        onClick={onClick}
+      />
     );
   }
   return null;
