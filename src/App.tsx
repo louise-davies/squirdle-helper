@@ -47,7 +47,7 @@ const App: React.FC = () => {
   const [pokedex, setPokedex] = React.useState<Pokedex>({});
   const [guesses, setGuesses] = React.useState<GuessType[]>([
     {
-      pokemon: "",
+      pokemon: null,
       gen: "unselected",
       type1: "unselected",
       type2: "unselected",
